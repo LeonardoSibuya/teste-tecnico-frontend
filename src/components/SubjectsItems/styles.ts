@@ -35,7 +35,6 @@ export const Subject = styled.div<Props>`
         : Colors.purple
     )};
     width: 120px;
-    cursor: pointer;
 `
 
 export const HeaderSubject = styled.div`

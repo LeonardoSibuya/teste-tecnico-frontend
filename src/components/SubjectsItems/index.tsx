@@ -11,7 +11,6 @@ export type PropsSubjects = {
 }
 
 const SubjectItems = ({ date, rating, subjectName }: PropsSubjects) => {
-
     return (
         <>
             <S.Content >
