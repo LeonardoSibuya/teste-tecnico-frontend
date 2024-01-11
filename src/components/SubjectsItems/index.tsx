@@ -13,7 +13,7 @@ export type PropsSubjects = {
 const SubjectItems = ({ date, rating, subjectName }: PropsSubjects) => {
     return (
         <>
-            <S.Content >
+            <S.Content>
                 <S.Subject subjectName={subjectName}>
                     <S.HeaderSubject>
                         <h3>

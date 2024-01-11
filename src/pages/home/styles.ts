@@ -93,6 +93,12 @@ export const ModalContent = styled.div`
         cursor: pointer;
         font-size: 12px;
         font-weight: bold;
+
+        &.btn-disabled {
+            background-color: ${Colors.gray};
+            color: ${Colors.lightGray};
+            cursor: not-allowed;
+        }
     }
 `
 
@@ -159,5 +165,11 @@ export const DivRating = styled.div`
         border: 2px solid ${Colors.gray};
         outline: none;
         border-radius: 10px;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     }
 `

@@ -17,7 +17,7 @@ export const Content = styled.div`
     align-items: start;
     gap: 2px;
 
-    img {
+    > img {
         width: 24px;
         height: 24px;
         cursor: pointer;
