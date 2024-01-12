@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Colors } from "../../styles"
+import { Colors, breakpoints } from "../../styles"
 
 export const Section = styled.section`
     padding: 24px 0;
@@ -48,6 +48,10 @@ export const ListSubjects = styled.ul`
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
+
+    @media (max-width: ${breakpoints.celphone}) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 `
 
 export const Modal = styled.div`
@@ -100,6 +104,15 @@ export const ModalContent = styled.div`
             cursor: not-allowed;
         }
     }
+
+    @media (max-width: ${breakpoints.celphone}) {
+        width: 84%;
+        padding: 24px;
+
+        button {
+            margin-left: 50%;
+        }
+    }
 `
 
 export const InfoContent = styled.div`
@@ -115,6 +128,11 @@ export const InfoContent = styled.div`
         justify-content: center;
         margin: 0 auto;
         gap: 24px;
+
+        @media (max-width: ${breakpoints.celphone}) {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 
     li {
@@ -136,6 +154,10 @@ export const InfoContent = styled.div`
 
         &.sociologia {
             background-color: ${Colors.purple};
+        }
+
+        @media (max-width: ${breakpoints.celphone}) {
+            text-align: center;
         }
     }
 `
