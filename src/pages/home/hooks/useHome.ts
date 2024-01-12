@@ -29,135 +29,35 @@ function useHome() {
         return `${day}/${month}/${year}`
     }
 
-    const [bimestre1, setBimestre1] = useState<PropsSubjects[]>([
-        {
-            id: 1,
-            subjectName: 'Biologia',
-            date: '10/01/2024',
-            rating: 6,
-        },
-        {
-            id: 2,
-            subjectName: 'Artes',
-            date: '10/01/2024',
-            rating: 4
-        },
-        {
-            id: 3,
-            subjectName: 'Geografia',
-            date: '10/01/2024',
-            rating: 8
-        },
-        {
-            id: 4,
-            subjectName: 'Sociologia',
-            date: '10/01/2024',
-            rating: 5.9
-        }
-    ]);
+    const [bimestre1, setBimestre1] = useState<PropsSubjects[]>();
 
-    const [bimestre2, setBimestre2] = useState<PropsSubjects[]>([
-        {
-            id: 5,
-            subjectName: 'Biologia',
-            date: '10/01/2024',
-            rating: 6,
-        },
-        {
-            id: 6,
-            subjectName: 'Artes',
-            date: '10/01/2024',
-            rating: 4
-        },
-        {
-            id: 7,
-            subjectName: 'Geografia',
-            date: '10/01/2024',
-            rating: 8
-        },
-        {
-            id: 8,
-            subjectName: 'Sociologia',
-            date: '10/01/2024',
-            rating: 5.9
-        }
-    ]);
+    const [bimestre2, setBimestre2] = useState<PropsSubjects[]>();
 
-    const [bimestre3, setBimestre3] = useState<PropsSubjects[]>([
-        {
-            id: 9,
-            subjectName: 'Biologia',
-            date: '10/01/2024',
-            rating: 6,
-        },
-        {
-            id: 10,
-            subjectName: 'Artes',
-            date: '10/01/2024',
-            rating: 4
-        },
-        {
-            id: 11,
-            subjectName: 'Geografia',
-            date: '10/01/2024',
-            rating: 8
-        },
-        {
-            id: 12,
-            subjectName: 'Sociologia',
-            date: '10/01/2024',
-            rating: 5.9
-        }
-    ]);
+    const [bimestre3, setBimestre3] = useState<PropsSubjects[]>();
 
-    const [bimestre4, setBimestre4] = useState<PropsSubjects[]>([
-        {
-            id: 13,
-            subjectName: 'Biologia',
-            date: '10/01/2024',
-            rating: 6,
-        },
-        {
-            id: 14,
-            subjectName: 'Artes',
-            date: '10/01/2024',
-            rating: 4
-        },
-        {
-            id: 15,
-            subjectName: 'Geografia',
-            date: '10/01/2024',
-            rating: 8
-        },
-        {
-            id: 16,
-            subjectName: 'Sociologia',
-            date: '10/01/2024',
-            rating: 5.9
-        }
-    ]);
+    const [bimestre4, setBimestre4] = useState<PropsSubjects[]>();
+
+    const [nextId, setNextId] = useState(1);
 
     const [modal, setModal] = useState<ModalState>({
         isVisible: false,
         date: fullDate(),
-        id: 1,
         rating: 0,
         subjectName: 'Artes',
         bimestre: '',
-        selectedSubject: ''
+        selectedSubject: '',
     })
 
     const closeModal = () => {
-        setModal({
+        setModal((prevModal) => ({
+            ...prevModal,
             isVisible: false,
             date: fullDate(),
-            id: 1,
             rating: 0,
-            subjectName: 'Artes',
             bimestre: '',
-            selectedSubject: ''
-        })
-    }
+            selectedSubject: '',
+        }));
+    };
 
     const alteraNota = (item: PropsSubjects) => {
         setModal({
@@ -174,46 +74,73 @@ function useHome() {
         })
     }
 
+    const handleDelete = (subjectId: PropsSubjects) => {
+        const id = subjectId.id
+
+        if (bimestre1) {
+            const updatedfirstBimestre = bimestre1.filter((materia) => materia.id !== id);
+            setBimestre1(updatedfirstBimestre);
+        }
+
+        if (bimestre2) {
+            const updatedsecondtBimestre = bimestre2.filter((materia) => materia.id !== id);
+            setBimestre2(updatedsecondtBimestre);
+        }
+
+        if (bimestre3) {
+            const updatedthirdBimestre = bimestre3.filter((materia) => materia.id !== id);
+            setBimestre3(updatedthirdBimestre);
+        }
+
+        if (bimestre4) {
+            const updatedfourthBimestre = bimestre4.filter((materia) => materia.id !== id);
+            setBimestre4(updatedfourthBimestre);
+        }
+    }
+
     const confirmarAlteracao = () => {
-        if (modal.selectedSubject && modal.bimestre && modal.rating !== undefined && modal.rating <= 10) {
-            // Atualiza a nota no estado do bimestre correspondente
-            const firstBimestre = modal.bimestre === '1' ? bimestre1 : [];
-            const secondtBimestre = modal.bimestre === '2' ? bimestre2 : [];
-            const thirdBimestre = modal.bimestre === '3' ? bimestre3 : [];
-            const fourthBimestre = modal.bimestre === '4' ? bimestre4 : [];
+        if (modal.selectedSubject && modal.bimestre && modal.rating !== undefined && modal.rating >= 0 && modal.rating <= 10) {
 
-            const updatedFirstBimestre = firstBimestre.map((materia) =>
-                materia.subjectName === modal.selectedSubject
-                    ? { ...materia, rating: modal.rating, date: fullDate() }
-                    : materia
-            );
+            const newItem = {
+                id: nextId,
+                subjectName: modal.selectedSubject,
+                date: fullDate(),
+                rating: modal.rating || 0,
+            };
 
-            const updatedSecondBimestre = secondtBimestre.map((materia) =>
-                materia.subjectName === modal.selectedSubject
-                    ? { ...materia, rating: modal.rating, date: fullDate() }
-                    : materia
-            );
+            setNextId(nextId + 1)
 
-            const updatedThirdBimestre = thirdBimestre.map((materia) =>
-                materia.subjectName === modal.selectedSubject
-                    ? { ...materia, rating: modal.rating, date: fullDate() }
-                    : materia
-            );
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const updateBimestre = (bimestreArray: any[]) => {
 
-            const updatedFourthBimestre = fourthBimestre.map((materia) =>
-                materia.subjectName === modal.selectedSubject
-                    ? { ...materia, rating: modal.rating, date: fullDate() }
-                    : materia
-            );
+                if (!bimestreArray) {
+                    bimestreArray = []
+                }
 
-            // Atualiza o estado do bimestre correspondente
-            modal.bimestre === '1' ? setBimestre1(updatedFirstBimestre) : null;
-            modal.bimestre === '2' ? setBimestre2(updatedSecondBimestre) : null;
-            modal.bimestre === '3' ? setBimestre3(updatedThirdBimestre) : null;
-            modal.bimestre === '4' ? setBimestre4(updatedFourthBimestre) : null;
+                const existingMateriaIndex = bimestreArray.findIndex(
+                    (materia) => materia.subjectName === modal.selectedSubject
+                );
+
+                if (existingMateriaIndex !== -1) {
+                    return bimestreArray.map((materia, index) =>
+                        index === existingMateriaIndex ? { ...materia, rating: newItem.rating, date: newItem.date } : materia
+                    );
+                } else {
+                    return [...bimestreArray, newItem];
+                }
+            };
+
+            if (modal.bimestre === '1') {
+                setBimestre1(updateBimestre(bimestre1!));
+            } else if (modal.bimestre === '2') {
+                setBimestre2(updateBimestre(bimestre2!));
+            } else if (modal.bimestre === '3') {
+                setBimestre3(updateBimestre(bimestre3!));
+            } else if (modal.bimestre === '4') {
+                setBimestre4(updateBimestre(bimestre4!));
+            }
 
             closeModal();
-            modal.selectedSubject = ''
         } else {
             // Lida com o caso em que algum dos campos necessários está ausente
             console.error('Campos necessários ausentes para confirmar a alteração.');
@@ -236,6 +163,7 @@ function useHome() {
         alteraNota,
         selectSubject,
         confirmarAlteracao,
+        handleDelete
     }
 }
 

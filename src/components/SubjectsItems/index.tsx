@@ -4,13 +4,14 @@ import trashIcon from '../../assets/trashIcon.png'
 import chart from '../../assets/chart.png'
 
 export type PropsSubjects = {
-    id: number
+    id?: number
     subjectName: "Biologia" | "Artes" | "Geografia" | "Sociologia"
     date: string
     rating: number
+    removeSubject?: (() => number | void)
 }
 
-const SubjectItems = ({ date, rating, subjectName }: PropsSubjects) => {
+const SubjectItems = ({ date, rating, subjectName, removeSubject }: PropsSubjects) => {
     return (
         <>
             <S.Content>
@@ -30,7 +31,7 @@ const SubjectItems = ({ date, rating, subjectName }: PropsSubjects) => {
                     </S.FooterSubject>
                 </S.Subject>
 
-                <img src={trashIcon} alt="icone de lixeira" />
+                <img src={trashIcon} alt="icone de lixeira" onClick={removeSubject} />
             </S.Content>
         </>
     )

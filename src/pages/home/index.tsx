@@ -18,7 +18,8 @@ const Home = () => {
         confirmarAlteracao,
         fullDate,
         selectSubject,
-        setModal
+        setModal,
+        handleDelete
     } = useHome()
 
     return (
@@ -46,20 +47,29 @@ const Home = () => {
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                            {bimestre1.map((item) => (
-                                <li key={item.id}
-                                    onClick={() => {
-                                        alteraNota(item)
-                                    }}
-                                >
-                                    <SubjectItems
-                                        id={item.id}
-                                        subjectName={item.subjectName}
-                                        date={item.date}
-                                        rating={item.rating}
-                                    />
-                                </li>
-                            ))}
+                            {bimestre1 ? (
+                                <>
+                                    {bimestre1.map((item) => (
+                                        <li key={item.id}
+                                            onClick={() => {
+                                                alteraNota(item)
+                                            }}
+                                        >
+                                            <SubjectItems
+                                                id={item.id}
+                                                subjectName={item.subjectName}
+                                                date={item.date}
+                                                rating={item.rating}
+                                                removeSubject={() => handleDelete(item)}
+                                            />
+                                        </li>
+                                    ))}
+                                </>
+                            ) : (
+                                <>
+                                    <h1>VAZIO</h1>
+                                </>
+                            )}
                         </S.ListSubjects>
                     </li>
 
@@ -84,20 +94,29 @@ const Home = () => {
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                            {bimestre2.map((item) => (
-                                <li key={item.id}
-                                    onClick={() => {
-                                        alteraNota(item)
-                                    }}
-                                >
-                                    <SubjectItems
-                                        id={item.id}
-                                        subjectName={item.subjectName}
-                                        date={item.date}
-                                        rating={item.rating}
-                                    />
-                                </li>
-                            ))}
+                            {bimestre2 ? (
+                                <>
+                                    {bimestre2.map((item) => (
+                                        <li key={item.id}
+                                            onClick={() => {
+                                                alteraNota(item)
+                                            }}
+                                        >
+                                            <SubjectItems
+                                                id={item.id}
+                                                subjectName={item.subjectName}
+                                                date={item.date}
+                                                rating={item.rating}
+                                                removeSubject={() => handleDelete(item)}
+                                            />
+                                        </li>
+                                    ))}
+                                </>
+                            ) : (
+                                <>
+                                    <h1>VAZIO</h1>
+                                </>
+                            )}
                         </S.ListSubjects>
                     </li>
 
@@ -122,20 +141,29 @@ const Home = () => {
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                            {bimestre3.map((item) => (
-                                <li key={item.id}
-                                    onClick={() => {
-                                        alteraNota(item)
-                                    }}
-                                >
-                                    <SubjectItems
-                                        id={item.id}
-                                        subjectName={item.subjectName}
-                                        date={item.date}
-                                        rating={item.rating}
-                                    />
-                                </li>
-                            ))}
+                        {bimestre3 ? (
+                                <>
+                                    {bimestre3.map((item) => (
+                                        <li key={item.id}
+                                            onClick={() => {
+                                                alteraNota(item)
+                                            }}
+                                        >
+                                            <SubjectItems
+                                                id={item.id}
+                                                subjectName={item.subjectName}
+                                                date={item.date}
+                                                rating={item.rating}
+                                                removeSubject={() => handleDelete(item)}
+                                            />
+                                        </li>
+                                    ))}
+                                </>
+                            ) : (
+                                <>
+                                    <h1>VAZIO</h1>
+                                </>
+                            )}
                         </S.ListSubjects>
                     </li>
 
@@ -160,20 +188,29 @@ const Home = () => {
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                            {bimestre4.map((item) => (
-                                <li key={item.id}
-                                    onClick={() => {
-                                        alteraNota(item)
-                                    }}
-                                >
-                                    <SubjectItems
-                                        id={item.id}
-                                        subjectName={item.subjectName}
-                                        date={item.date}
-                                        rating={item.rating}
-                                    />
-                                </li>
-                            ))}
+                        {bimestre4 ? (
+                                <>
+                                    {bimestre4.map((item) => (
+                                        <li key={item.id}
+                                            onClick={() => {
+                                                alteraNota(item)
+                                            }}
+                                        >
+                                            <SubjectItems
+                                                id={item.id}
+                                                subjectName={item.subjectName}
+                                                date={item.date}
+                                                rating={item.rating}
+                                                removeSubject={() => handleDelete(item)}
+                                            />
+                                        </li>
+                                    ))}
+                                </>
+                            ) : (
+                                <>
+                                    <h1>VAZIO</h1>
+                                </>
+                            )}
                         </S.ListSubjects>
                     </li>
 
