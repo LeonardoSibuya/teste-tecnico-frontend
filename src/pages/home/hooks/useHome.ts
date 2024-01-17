@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useState } from 'react'
 
 import { PropsSubjects } from '../../../components/SubjectsItems'
+
+import { sendRequest } from '../../../api/api'
 
 interface ModalState extends PropsSubjects {
     isVisible: boolean
@@ -10,23 +14,18 @@ interface ModalState extends PropsSubjects {
 
 function useHome() {
 
-    const fullDate = () => {
-        const date = new Date()
+    const fullDate = (inputDate: string) => {
+        const date = new Date(inputDate)
 
         const day = date.getDate()
         const month = date.getMonth() + 1
         const year = date.getFullYear()
 
 
-        if (day < 10 && month < 9) {
-            return `0${day}/0${month}/${year}`
-        } else if (month < 9) {
-            return `${day}/0${month}/${year}`
-        } else if (day < 10) {
-            return `0${day}/${month}/${year}`
-        }
+        const formattedDay = day < 10 ? `0${day}` : `${day}`;
+        const formattedMonth = month < 10 ? `0${month}` : `${month}`;
 
-        return `${day}/${month}/${year}`
+        return `${formattedDay}/${formattedMonth}/${year}`;
     }
 
     const [bimestre1, setBimestre1] = useState<PropsSubjects[]>();
@@ -41,7 +40,7 @@ function useHome() {
 
     const [modal, setModal] = useState<ModalState>({
         isVisible: false,
-        date: fullDate(),
+        date: fullDate(''),
         rating: 0,
         subjectName: 'Artes',
         bimestre: '',
@@ -52,7 +51,7 @@ function useHome() {
         setModal((prevModal) => ({
             ...prevModal,
             isVisible: false,
-            date: fullDate(),
+            date: fullDate(''),
             rating: 0,
             bimestre: '',
             selectedSubject: '',
@@ -104,7 +103,7 @@ function useHome() {
             const newItem = {
                 id: nextId,
                 subjectName: modal.selectedSubject,
-                date: fullDate(),
+                date: fullDate(''),
                 rating: modal.rating || 0,
             };
 
@@ -150,6 +149,51 @@ function useHome() {
             }
         }
     };
+
+    async function fetchBimestres() {
+        try {
+            const bimestres = await sendRequest('/bimestres', 'GET');
+
+            const subjectFirstBimestre = bimestres[0]?.materias?.map((materia: any) => ({
+                id: materia.id,
+                subjectName: materia.name,
+                date: fullDate(materia.updateAt),
+                rating: materia.ratings,
+            })) || [];
+
+            const subjectSecondBimestre = bimestres[1]?.materias?.map((materia: any) => ({
+                id: materia.id,
+                subjectName: materia.name,
+                date: fullDate(materia.updateAt),
+                rating: materia.ratings,
+            })) || [];
+
+            const subjectThirdBimestre = bimestres[2]?.materias?.map((materia: any) => ({
+                id: materia.id,
+                subjectName: materia.name,
+                date: fullDate(materia.updateAt),
+                rating: materia.ratings,
+            })) || [];
+
+            const subjectFouryBimestre = bimestres[3]?.materias?.map((materia: any) => ({
+                id: materia.id,
+                subjectName: materia.name,
+                date: fullDate(materia.updateAt),
+                rating: materia.ratings,
+            })) || [];
+
+            setBimestre1(subjectFirstBimestre);
+            setBimestre2(subjectSecondBimestre);
+            setBimestre3(subjectThirdBimestre);
+            setBimestre4(subjectFouryBimestre);
+        } catch (error) {
+            // Lide com o erro aqui
+            console.error('Erro ao buscar bimestres:', error);
+        }
+    }
+
+    // Chamada para buscar os bimestres
+    fetchBimestres();
 
     return {
         bimestre1,

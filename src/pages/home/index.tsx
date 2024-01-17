@@ -262,7 +262,7 @@ const Home = () => {
                                     setModal((prevModal) => ({
                                         ...prevModal,
                                         rating: novoRating,
-                                        date: novoRating !== prevModal.rating ? fullDate() : prevModal.date,
+                                        date: novoRating !== prevModal.rating ? fullDate('') : prevModal.date,
                                     }));
                                 }}
                             />
