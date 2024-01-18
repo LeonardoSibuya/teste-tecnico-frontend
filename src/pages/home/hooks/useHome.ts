@@ -10,6 +10,7 @@ interface ModalState extends PropsSubjects {
     isVisible: boolean
     bimestre: string,
     selectedSubject: string
+    rota: string
 }
 
 function useHome() {
@@ -36,8 +37,6 @@ function useHome() {
 
     const [bimestre4, setBimestre4] = useState<PropsSubjects[]>();
 
-    const [nextId, setNextId] = useState(1);
-
     const [modal, setModal] = useState<ModalState>({
         isVisible: false,
         date: fullDate(''),
@@ -45,6 +44,7 @@ function useHome() {
         subjectName: 'Artes',
         bimestre: '',
         selectedSubject: '',
+        rota: ''
     })
 
     const closeModal = () => {
@@ -73,82 +73,58 @@ function useHome() {
         })
     }
 
-    const handleDelete = (subjectId: PropsSubjects) => {
-        const id = subjectId.id
-
-        if (bimestre1) {
-            const updatedfirstBimestre = bimestre1.filter((materia) => materia.id !== id);
-            setBimestre1(updatedfirstBimestre);
-        }
-
-        if (bimestre2) {
-            const updatedsecondtBimestre = bimestre2.filter((materia) => materia.id !== id);
-            setBimestre2(updatedsecondtBimestre);
-        }
-
-        if (bimestre3) {
-            const updatedthirdBimestre = bimestre3.filter((materia) => materia.id !== id);
-            setBimestre3(updatedthirdBimestre);
-        }
-
-        if (bimestre4) {
-            const updatedfourthBimestre = bimestre4.filter((materia) => materia.id !== id);
-            setBimestre4(updatedfourthBimestre);
-        }
-    }
-
-    const confirmarAlteracao = () => {
+    async function confirmarAlteracao(bimestreId: string, rota: string) {
         if (modal.selectedSubject && modal.bimestre && modal.rating !== undefined && modal.rating >= 0 && modal.rating <= 10) {
 
-            const newItem = {
-                id: nextId,
-                subjectName: modal.selectedSubject,
-                date: fullDate(''),
-                rating: modal.rating || 0,
-            };
+            try {
+                await sendRequest(`${rota}`, 'POST', {
+                    name: modal.selectedSubject,
+                    rating: modal.rating,
+                    bimestreId: bimestreId
+                });
 
-            setNextId(nextId + 1)
+                const updateBimestre = (bimestreArray: PropsSubjects[]) => {
+                    if (!bimestreArray) {
+                        bimestreArray = [];
+                    }
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const updateBimestre = (bimestreArray: any[]) => {
-
-                if (!bimestreArray) {
-                    bimestreArray = []
-                }
-
-                const existingMateriaIndex = bimestreArray.findIndex(
-                    (materia) => materia.subjectName === modal.selectedSubject
-                );
-
-                if (existingMateriaIndex !== -1) {
-                    return bimestreArray.map((materia, index) =>
-                        index === existingMateriaIndex ? { ...materia, rating: newItem.rating, date: newItem.date } : materia
+                    const existingMateriaIndex = bimestreArray.findIndex(
+                        (materia) => materia.subjectName === modal.selectedSubject
                     );
-                } else {
-                    return [...bimestreArray, newItem];
+
+                    if (existingMateriaIndex !== -1) {
+                        return bimestreArray.map((materia, index) =>
+                            index === existingMateriaIndex ? { ...materia, rating: modal.rating, date: modal.date } : materia
+                        );
+                    } else {
+                        return [...bimestreArray];
+                    }
+                };
+
+                if (modal.bimestre === '65a6d8db07ce7636c99d5ea8') {
+                    setBimestre1(updateBimestre(bimestre1!));
+                } else if (modal.bimestre === '65a6e64e33012077d03d5700') {
+                    setBimestre2(updateBimestre(bimestre2!));
+                } else if (modal.bimestre === '65a97f9f2160a7decc701f9c') {
+                    setBimestre3(updateBimestre(bimestre3!));
+                } else if (modal.bimestre === '65a9807e064d90334683c281') {
+                    setBimestre4(updateBimestre(bimestre4!));
                 }
-            };
 
-            if (modal.bimestre === '1') {
-                setBimestre1(updateBimestre(bimestre1!));
-            } else if (modal.bimestre === '2') {
-                setBimestre2(updateBimestre(bimestre2!));
-            } else if (modal.bimestre === '3') {
-                setBimestre3(updateBimestre(bimestre3!));
-            } else if (modal.bimestre === '4') {
-                setBimestre4(updateBimestre(bimestre4!));
+                console.log(rota)
+
+                closeModal();
+            } catch (error) {
+                console.log(error);
             }
-
-            closeModal();
         } else {
-            // Lida com o caso em que algum dos campos necessários está ausente
             console.error('Campos necessários ausentes para confirmar a alteração.');
 
             if (modal.rating < 0 || modal.rating > 10) {
-                alert('A nota máxima é 10')
+                alert('A nota máxima é 10');
             }
         }
-    };
+    }
 
     async function fetchBimestres() {
         try {
@@ -187,13 +163,41 @@ function useHome() {
             setBimestre3(subjectThirdBimestre);
             setBimestre4(subjectFouryBimestre);
         } catch (error) {
-            // Lide com o erro aqui
             console.error('Erro ao buscar bimestres:', error);
         }
     }
 
-    // Chamada para buscar os bimestres
-    fetchBimestres();
+    async function handleDelete(subjectId: string) {
+
+        const id = subjectId
+
+        try {
+            await sendRequest(`/materias?id=${id}`, 'DELETE');
+
+            if (bimestre1) {
+                const updatedfirstBimestre = bimestre1.filter((materia) => materia.id !== id);
+                setBimestre1(updatedfirstBimestre);
+            }
+
+            if (bimestre2) {
+                const updatedsecondtBimestre = bimestre2.filter((materia) => materia.id !== id);
+                setBimestre2(updatedsecondtBimestre);
+            }
+
+            if (bimestre3) {
+                const updatedthirdBimestre = bimestre3.filter((materia) => materia.id !== id);
+                setBimestre3(updatedthirdBimestre);
+            }
+
+            if (bimestre4) {
+                const updatedfourthBimestre = bimestre4.filter((materia) => materia.id !== id);
+                setBimestre4(updatedfourthBimestre);
+            }
+
+        } catch (error) {
+            throw new Error(`Erro ao deletar materia com id: ${id}`) || error
+        }
+    }
 
     return {
         bimestre1,
@@ -207,7 +211,8 @@ function useHome() {
         alteraNota,
         selectSubject,
         confirmarAlteracao,
-        handleDelete
+        handleDelete,
+        fetchBimestres
     }
 }
 

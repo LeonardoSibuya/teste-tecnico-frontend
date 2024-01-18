@@ -4,11 +4,11 @@ import trashIcon from '../../assets/trashIcon.png'
 import chart from '../../assets/chart.png'
 
 export type PropsSubjects = {
-    id?: number
+    id?: string
     subjectName: "Biologia" | "Artes" | "Geografia" | "Sociologia"
     date: string
     rating: number
-    removeSubject?: (() => number | void)
+    removeSubject?: (() => Promise<void>) | undefined
 }
 
 const SubjectItems = ({ date, rating, subjectName, removeSubject }: PropsSubjects) => {

@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import * as S from './styles'
 
 import { Container } from '../../styles'
@@ -19,8 +21,13 @@ const Home = () => {
         fullDate,
         selectSubject,
         setModal,
-        handleDelete
+        handleDelete,
+        fetchBimestres
     } = useHome()
+
+    useEffect(() => {
+        fetchBimestres();
+    }, []);
 
     return (
         <S.Section>
@@ -39,8 +46,9 @@ const Home = () => {
                                         id: modal.id,
                                         rating: modal.rating,
                                         subjectName: modal.subjectName,
-                                        bimestre: modal.bimestre = '1',
-                                        selectedSubject: modal.selectedSubject
+                                        bimestre: modal.bimestre = '65a6d8db07ce7636c99d5ea8',
+                                        selectedSubject: modal.selectedSubject,
+                                        rota: '/materiaprimeirobimestre'
                                     })
                                 }>
                                 Lançar nota <span>+</span>
@@ -60,7 +68,7 @@ const Home = () => {
                                                 subjectName={item.subjectName}
                                                 date={item.date}
                                                 rating={item.rating}
-                                                removeSubject={() => handleDelete(item)}
+                                                removeSubject={() => handleDelete(item.id!)}
                                             />
                                         </li>
                                     ))}
@@ -86,8 +94,9 @@ const Home = () => {
                                         id: modal.id,
                                         rating: modal.rating,
                                         subjectName: modal.subjectName,
-                                        bimestre: modal.bimestre = '2',
-                                        selectedSubject: modal.selectedSubject
+                                        bimestre: modal.bimestre = '65a6e64e33012077d03d5700',
+                                        selectedSubject: modal.selectedSubject,
+                                        rota: '/materiasegundobimestre'
                                     })
                                 }>
                                 Lançar nota <span>+</span>
@@ -107,7 +116,7 @@ const Home = () => {
                                                 subjectName={item.subjectName}
                                                 date={item.date}
                                                 rating={item.rating}
-                                                removeSubject={() => handleDelete(item)}
+                                                removeSubject={() => handleDelete(item.id!)}
                                             />
                                         </li>
                                     ))}
@@ -133,15 +142,16 @@ const Home = () => {
                                         id: modal.id,
                                         rating: modal.rating,
                                         subjectName: modal.subjectName,
-                                        bimestre: modal.bimestre = '3',
-                                        selectedSubject: modal.selectedSubject
+                                        bimestre: modal.bimestre = '65a97f9f2160a7decc701f9c',
+                                        selectedSubject: modal.selectedSubject,
+                                        rota: '/materiaterceirobimestre'
                                     })
                                 }>
                                 Lançar nota <span>+</span>
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                        {bimestre3 ? (
+                            {bimestre3 ? (
                                 <>
                                     {bimestre3.map((item) => (
                                         <li key={item.id}
@@ -154,7 +164,7 @@ const Home = () => {
                                                 subjectName={item.subjectName}
                                                 date={item.date}
                                                 rating={item.rating}
-                                                removeSubject={() => handleDelete(item)}
+                                                removeSubject={() => handleDelete(item.id!)}
                                             />
                                         </li>
                                     ))}
@@ -180,15 +190,16 @@ const Home = () => {
                                         id: modal.id,
                                         rating: modal.rating,
                                         subjectName: modal.subjectName,
-                                        bimestre: modal.bimestre = '4',
-                                        selectedSubject: modal.selectedSubject
+                                        bimestre: modal.bimestre = '65a9807e064d90334683c281',
+                                        selectedSubject: modal.selectedSubject,
+                                        rota: '/materiaquartobimestre'
                                     })
                                 }>
                                 Lançar nota <span>+</span>
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                        {bimestre4 ? (
+                            {bimestre4 ? (
                                 <>
                                     {bimestre4.map((item) => (
                                         <li key={item.id}
@@ -201,7 +212,7 @@ const Home = () => {
                                                 subjectName={item.subjectName}
                                                 date={item.date}
                                                 rating={item.rating}
-                                                removeSubject={() => handleDelete(item)}
+                                                removeSubject={() => handleDelete(item.id!)}
                                             />
                                         </li>
                                     ))}
@@ -221,7 +232,14 @@ const Home = () => {
                 <S.ModalContent>
                     <S.InfoContent>
                         <S.HeaderModal>
-                            <h3>Bimestre {modal.bimestre}</h3>
+                            <h3>Bimestre
+                                {
+                                    modal.bimestre === '65a6d8db07ce7636c99d5ea8' ? ' 1'
+                                        : modal.bimestre === '65a6e64e33012077d03d5700' ? ' 2'
+                                            : modal.bimestre === '65a97f9f2160a7decc701f9c' ? ' 3'
+                                                : ' 4'
+                                }
+                            </h3>
                             <span onClick={closeModal}>X</span>
                         </S.HeaderModal>
                         <p>Disciplina</p>
@@ -270,7 +288,7 @@ const Home = () => {
                     </S.InfoContent>
 
                     <button
-                        onClick={() => confirmarAlteracao()}
+                        onClick={() => confirmarAlteracao(modal.bimestre, modal.rota)}
                         className={modal.selectedSubject === '' ? 'btn-disabled' : ''}
                     >
                         Confirmar

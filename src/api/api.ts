@@ -4,13 +4,20 @@ async function sendRequest(url: string, method: string, data?: object) {
         // Outros cabeçalhos, se necessário
     };
 
+    let endpoint = `http://localhost:3333${url}`;
+
+    // Adicionar ID à URL para métodos DELETE
+    if (method === 'DELETE' && data && typeof data === 'string') {
+        endpoint += `?id=${data}`;
+    }
+
     const options: RequestInit = {
         method: method,
         headers: headers,
-        body: data ? JSON.stringify(data) : undefined,
+        body: data && method !== 'DELETE' ? JSON.stringify(data) : undefined,
     };
 
-    const response = await fetch(`http://localhost:3333${url}`, options);
+    const response = await fetch(endpoint, options);
     const responseData = await response.json();
 
     if (!response.ok) {
@@ -20,4 +27,4 @@ async function sendRequest(url: string, method: string, data?: object) {
     return responseData;
 }
 
-export { sendRequest }
+export { sendRequest };
