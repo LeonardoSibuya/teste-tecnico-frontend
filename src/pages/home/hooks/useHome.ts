@@ -44,7 +44,7 @@ function useHome() {
         subjectName: 'Artes',
         bimestre: '',
         selectedSubject: '',
-        rota: ''
+        rota: '',
     })
 
     const closeModal = () => {
@@ -58,72 +58,11 @@ function useHome() {
         }));
     };
 
-    const alteraNota = (item: PropsSubjects) => {
-        setModal({
-            ...modal,
-            rating: item.rating,
-            selectedSubject: item.subjectName
-        })
-    }
-
     const selectSubject = (subject: string) => {
         setModal({
             ...modal,
-            selectedSubject: subject,
+            selectedSubject: subject
         })
-    }
-
-    async function confirmarAlteracao(bimestreId: string, rota: string) {
-        if (modal.selectedSubject && modal.bimestre && modal.rating !== undefined && modal.rating >= 0 && modal.rating <= 10) {
-
-            try {
-                await sendRequest(`${rota}`, 'POST', {
-                    name: modal.selectedSubject,
-                    rating: modal.rating,
-                    bimestreId: bimestreId
-                });
-
-                const updateBimestre = (bimestreArray: PropsSubjects[]) => {
-                    if (!bimestreArray) {
-                        bimestreArray = [];
-                    }
-
-                    const existingMateriaIndex = bimestreArray.findIndex(
-                        (materia) => materia.subjectName === modal.selectedSubject
-                    );
-
-                    if (existingMateriaIndex !== -1) {
-                        return bimestreArray.map((materia, index) =>
-                            index === existingMateriaIndex ? { ...materia, rating: modal.rating, date: modal.date } : materia
-                        );
-                    } else {
-                        return [...bimestreArray];
-                    }
-                };
-
-                if (modal.bimestre === '65a6d8db07ce7636c99d5ea8') {
-                    setBimestre1(updateBimestre(bimestre1!));
-                } else if (modal.bimestre === '65a6e64e33012077d03d5700') {
-                    setBimestre2(updateBimestre(bimestre2!));
-                } else if (modal.bimestre === '65a97f9f2160a7decc701f9c') {
-                    setBimestre3(updateBimestre(bimestre3!));
-                } else if (modal.bimestre === '65a9807e064d90334683c281') {
-                    setBimestre4(updateBimestre(bimestre4!));
-                }
-
-                console.log(rota)
-
-                closeModal();
-            } catch (error) {
-                console.log(error);
-            }
-        } else {
-            console.error('Campos necessários ausentes para confirmar a alteração.');
-
-            if (modal.rating < 0 || modal.rating > 10) {
-                alert('A nota máxima é 10');
-            }
-        }
     }
 
     async function fetchBimestres() {
@@ -163,7 +102,72 @@ function useHome() {
             setBimestre3(subjectThirdBimestre);
             setBimestre4(subjectFouryBimestre);
         } catch (error) {
-            console.error('Erro ao buscar bimestres:', error);
+            alert(`ERRO: ${error} - erro ao listar as matérias`)
+        }
+    }
+
+    async function updtateRating(id: string, rating: number) {
+        try {
+            await sendRequest('/atualizarnota', 'PUT', {
+                id: id,
+                rating: rating,
+            });
+
+        } catch (error) {
+            alert(`ERRO: ${error} - erro ao atualizar nota desta matéria`)
+        }
+    }
+
+    async function updateSubject(bimestreId: string, rota: string) {
+        if (modal.selectedSubject && modal.bimestre && modal.rating !== undefined && modal.rating >= 0 && modal.rating <= 10) {
+            try {
+                const updateBimestre = (bimestreArray: PropsSubjects[]) => {
+                    if (!bimestreArray) {
+                        bimestreArray = [];
+                    }
+
+                    const existingMateriaIndex = bimestreArray.findIndex(
+                        (materia) => materia.subjectName === modal.selectedSubject
+                    );
+
+                    if (existingMateriaIndex !== -1) {
+                        // A matéria já existe, então atualizamos o rating
+                        updtateRating(bimestreArray[existingMateriaIndex].id!, modal.rating);
+                        return bimestreArray.map((materia, index) =>
+                            index === existingMateriaIndex ? { ...materia, rating: modal.rating, date: modal.date } : materia
+                        );
+                    } else {
+                        // A matéria não existe, então adicionamos uma nova
+                        return [...bimestreArray];
+                    }
+                };
+
+                await sendRequest(`${rota}`, 'POST', {
+                    name: modal.selectedSubject,
+                    rating: modal.rating,
+                    bimestreId: bimestreId
+                });
+
+                if (modal.bimestre === '65a6d8db07ce7636c99d5ea8') {
+                    setBimestre1(updateBimestre(bimestre1!));
+                } else if (modal.bimestre === '65a6e64e33012077d03d5700') {
+                    setBimestre2(updateBimestre(bimestre2!));
+                } else if (modal.bimestre === '65a97f9f2160a7decc701f9c') {
+                    setBimestre3(updateBimestre(bimestre3!));
+                } else if (modal.bimestre === '65a9807e064d90334683c281') {
+                    setBimestre4(updateBimestre(bimestre4!));
+                }
+
+                closeModal();
+            } catch (error) {
+                alert(`ERRO: ${error} - erro ao atualizar esta matéria`)
+            }
+        } else {
+            console.error('Campos necessários ausentes para confirmar a alteração.');
+
+            if (modal.rating > 10) {
+                alert('A nota máxima é 10');
+            }
         }
     }
 
@@ -195,7 +199,8 @@ function useHome() {
             }
 
         } catch (error) {
-            throw new Error(`Erro ao deletar materia com id: ${id}`) || error
+            alert(`ERRO: ${error} - erro ao excluir esta matéria`)
+            throw new Error(`Erro ao deletar materia com id: ${id}`)
         }
     }
 
@@ -208,9 +213,8 @@ function useHome() {
         setModal,
         fullDate,
         closeModal,
-        alteraNota,
         selectSubject,
-        confirmarAlteracao,
+        updateSubject,
         handleDelete,
         fetchBimestres
     }

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 
 import * as S from './styles'
@@ -15,20 +16,24 @@ const Home = () => {
         bimestre3,
         bimestre4,
         modal,
-        alteraNota,
         closeModal,
-        confirmarAlteracao,
+        updateSubject,
         fullDate,
         selectSubject,
         setModal,
         handleDelete,
-        fetchBimestres
+        fetchBimestres,
     } = useHome()
 
+    
     useEffect(() => {
-        fetchBimestres();
-    }, []);
-
+        const fetchData = async () => {
+            await fetchBimestres();
+        };
+    
+        fetchData();
+    }, [modal.rating, modal.selectedSubject]);
+    
     return (
         <S.Section>
             <Container>
@@ -55,13 +60,10 @@ const Home = () => {
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                            {bimestre1 ? (
+                            {bimestre1 && bimestre1.length > 0 ? (
                                 <>
                                     {bimestre1.map((item) => (
                                         <li key={item.id}
-                                            onClick={() => {
-                                                alteraNota(item)
-                                            }}
                                         >
                                             <SubjectItems
                                                 id={item.id}
@@ -75,7 +77,14 @@ const Home = () => {
                                 </>
                             ) : (
                                 <>
-                                    <h1>VAZIO</h1>
+                                    <S.NoSubjects>
+                                        <h5>
+                                            Bimestre ainda sem notas
+                                        </h5>
+                                        <p>
+                                            Para adicionar uma matéria, ou atualizar as notas, clique no botão <b>'Lançar nota'</b>
+                                        </p>
+                                    </S.NoSubjects>
                                 </>
                             )}
                         </S.ListSubjects>
@@ -103,13 +112,10 @@ const Home = () => {
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                            {bimestre2 ? (
+                            {bimestre2 && bimestre2.length > 0 ? (
                                 <>
                                     {bimestre2.map((item) => (
                                         <li key={item.id}
-                                            onClick={() => {
-                                                alteraNota(item)
-                                            }}
                                         >
                                             <SubjectItems
                                                 id={item.id}
@@ -123,7 +129,14 @@ const Home = () => {
                                 </>
                             ) : (
                                 <>
-                                    <h1>VAZIO</h1>
+                                    <S.NoSubjects>
+                                        <h5>
+                                            Bimestre ainda sem notas
+                                        </h5>
+                                        <p>
+                                            Para adicionar uma matéria, ou atualizar as notas, clique no botão <b>'Lançar nota'</b>
+                                        </p>
+                                    </S.NoSubjects>
                                 </>
                             )}
                         </S.ListSubjects>
@@ -151,13 +164,10 @@ const Home = () => {
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                            {bimestre3 ? (
+                            {bimestre3 && bimestre3.length > 0 ? (
                                 <>
                                     {bimestre3.map((item) => (
                                         <li key={item.id}
-                                            onClick={() => {
-                                                alteraNota(item)
-                                            }}
                                         >
                                             <SubjectItems
                                                 id={item.id}
@@ -171,7 +181,14 @@ const Home = () => {
                                 </>
                             ) : (
                                 <>
-                                    <h1>VAZIO</h1>
+                                    <S.NoSubjects>
+                                        <h5>
+                                            Bimestre ainda sem notas
+                                        </h5>
+                                        <p>
+                                            Para adicionar uma matéria, ou atualizar as notas, clique no botão <b>'Lançar nota'</b>
+                                        </p>
+                                    </S.NoSubjects>
                                 </>
                             )}
                         </S.ListSubjects>
@@ -199,13 +216,10 @@ const Home = () => {
                             </button>
                         </S.HeaderSection>
                         <S.ListSubjects>
-                            {bimestre4 ? (
+                            {bimestre4 && bimestre4.length > 0 ? (
                                 <>
                                     {bimestre4.map((item) => (
                                         <li key={item.id}
-                                            onClick={() => {
-                                                alteraNota(item)
-                                            }}
                                         >
                                             <SubjectItems
                                                 id={item.id}
@@ -219,7 +233,14 @@ const Home = () => {
                                 </>
                             ) : (
                                 <>
-                                    <h1>VAZIO</h1>
+                                    <S.NoSubjects>
+                                        <h5>
+                                            Bimestre ainda sem notas
+                                        </h5>
+                                        <p>
+                                            Para adicionar uma matéria, ou atualizar as notas, clique no botão <b>'Lançar nota'</b>
+                                        </p>
+                                    </S.NoSubjects>
                                 </>
                             )}
                         </S.ListSubjects>
@@ -288,7 +309,9 @@ const Home = () => {
                     </S.InfoContent>
 
                     <button
-                        onClick={() => confirmarAlteracao(modal.bimestre, modal.rota)}
+                        onClick={() => {
+                            updateSubject(modal.bimestre, modal.rota);
+                        }}
                         className={modal.selectedSubject === '' ? 'btn-disabled' : ''}
                     >
                         Confirmar

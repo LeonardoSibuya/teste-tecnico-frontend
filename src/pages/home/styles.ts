@@ -21,6 +21,7 @@ export const HeaderSection = styled.div`
         color: ${Colors.white};
         font-size: 14px;
         font-weight: normal;
+        font-weight: bold;
     }
 
     button {
@@ -51,6 +52,38 @@ export const ListSubjects = styled.ul`
 
     @media (max-width: ${breakpoints.celphone}) {
         grid-template-columns: repeat(2, 1fr);
+    }
+`
+
+export const NoSubjects = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 16px;
+    text-align: start;
+    color: ${Colors.white};
+    margin-bottom: 16px;
+
+    h5 {
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 10px;
+        letter-spacing: 1px;
+        line-height: 16px;
+    }
+
+    @media (max-width: ${breakpoints.celphone}) {
+        h5 {
+            font-size: 10px;
+        }
+
+        p {
+            font-size: 8px;
+        }
     }
 `
 
