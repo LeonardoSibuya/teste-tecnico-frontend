@@ -106,12 +106,16 @@ function useHome() {
         }
     }
 
+    const [localRating, setLocalRating] = useState(modal.rating)
+
     async function updtateRating(id: string, rating: number) {
         try {
             await sendRequest('/atualizarnota', 'PUT', {
                 id: id,
-                rating: rating,
+                rating: rating
             });
+
+            setLocalRating(rating)
 
         } catch (error) {
             alert(`ERRO: ${error} - erro ao atualizar nota desta matéria`)
@@ -210,13 +214,14 @@ function useHome() {
         bimestre3,
         bimestre4,
         modal,
+        localRating, 
         setModal,
         fullDate,
         closeModal,
         selectSubject,
         updateSubject,
         handleDelete,
-        fetchBimestres
+        fetchBimestres,
     }
 }
 

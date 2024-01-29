@@ -16,6 +16,7 @@ const Home = () => {
         bimestre3,
         bimestre4,
         modal,
+        localRating,
         closeModal,
         updateSubject,
         fullDate,
@@ -32,7 +33,7 @@ const Home = () => {
         };
     
         fetchData();
-    }, [modal.rating, modal.selectedSubject]);
+    }, [modal.rating, modal.selectedSubject, localRating]);
     
     return (
         <S.Section>
